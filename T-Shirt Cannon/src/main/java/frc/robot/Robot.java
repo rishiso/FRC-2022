@@ -15,6 +15,7 @@ public class Robot extends TimedRobot {
 
   //Drive Vars
   private DifferentialDrive m_drive;
+  private double speedFactor;
 
   //Control Vars
   private Joystick m_stick;
@@ -28,13 +29,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     //Drive Init
-    Talon leftRear = new Talon(RobotMap.M_REAR_LEFT);
-    Talon leftFront = new Talon(RobotMap.M_FRONT_LEFT);
-    Talon rightRear = new Talon(RobotMap.M_REAR_RIGHT);
-    Talon rightFront = new Talon(RobotMap.M_FRONT_LEFT);
-
-    SpeedControllerGroup m_left = new SpeedControllerGroup(leftRear, leftFront);
-    SpeedControllerGroup m_right = new SpeedControllerGroup(rightRear, rightFront);
+    Talon m_left = new Talon(RobotMap.M_LEFT);
+    Talon m_right = new Talon(RobotMap.M_RIGHT);
 
     m_drive = new DifferentialDrive(m_left, m_right);
 
@@ -66,11 +62,18 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+  }
 
   @Override
   public void teleopPeriodic() {
-    m_drive.arcadeDrive(-m_stick.getX(), m_stick.getY(), true);
+    speedFactor = m_stick.getThrottle();
+    speedFactor *= -1;
+    speedFactor += 1;
+    speedFactor = .25 * speedFactor + .5;
+    //Ranges from 50% to 100%
+
+    m_drive.arcadeDrive(-speedFactor * m_stick.getY(), speedFactor * m_stick.getZ());
   }
 
   @Override
