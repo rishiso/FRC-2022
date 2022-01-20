@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.*;
+
 
 public class Robot extends TimedRobot {
   
@@ -19,6 +21,9 @@ public class Robot extends TimedRobot {
   //Control Vars
   private Joystick m_stick;
 
+  //Sensor Vars
+  private NetworkTable limelight;
+
   @Override
   public void robotInit() {
 
@@ -28,18 +33,16 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     //Drive Init
-    Talon leftRear = new Talon(RobotMap.M_REAR_LEFT);
-    Talon leftFront = new Talon(RobotMap.M_FRONT_LEFT);
-    Talon rightRear = new Talon(RobotMap.M_REAR_RIGHT);
-    Talon rightFront = new Talon(RobotMap.M_FRONT_LEFT);
-
-    SpeedControllerGroup m_left = new SpeedControllerGroup(leftRear, leftFront);
-    SpeedControllerGroup m_right = new SpeedControllerGroup(rightRear, rightFront);
+    Talon m_left = new Talon(RobotMap.M_LEFT);
+    Talon m_right = new Talon(RobotMap.M_RIGHT);
 
     m_drive = new DifferentialDrive(m_left, m_right);
 
     //Control Init
     m_stick = new Joystick(RobotMap.JOYSTICK);
+
+    //Limelight Init
+    limelight = NetworkTableInstance.getDefault().getTable("limelight");
   }
 
   @Override
