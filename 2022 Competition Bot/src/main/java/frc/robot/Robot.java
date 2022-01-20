@@ -70,6 +70,14 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    double sensitivity = m_stick.getThrottle(); // 1 to -1
+    sensitivity *= -1;
+    sensitivity *= .25;
+    sensitivity += .75;
+
+    SmartDashboard.putNumber("Sensitivity: ", sensitivity);
+
+    //Throttle allows control from .5 to 1
     m_drive.arcadeDrive(-m_stick.getX(), m_stick.getY(), true);
   }
 
