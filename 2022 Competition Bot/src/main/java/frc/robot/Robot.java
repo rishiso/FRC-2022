@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.networktables.*;
@@ -33,8 +34,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
 
     //Drive Init
-    Talon m_left = new Talon(RobotMap.M_LEFT);
-    Talon m_right = new Talon(RobotMap.M_RIGHT);
+    PWMSparkMax m_left = new PWMSparkMax(RobotMap.M_LEFT);
+    PWMSparkMax m_right = new PWMSparkMax(RobotMap.M_RIGHT);
 
     m_drive = new DifferentialDrive(m_left, m_right);
 
