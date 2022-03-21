@@ -25,6 +25,9 @@ public class Robot extends TimedRobot {
   //Sensor Vars
   private NetworkTable limelight;
 
+  //Shooting Vars
+  PWMSparkMax m_shooter;
+
   @Override
   public void robotInit() {
 
@@ -44,6 +47,9 @@ public class Robot extends TimedRobot {
 
     //Limelight Init
     limelight = NetworkTableInstance.getDefault().getTable("limelight");
+
+    //Shoot Init
+    m_shooter = new PWMSparkMax(RobotMap.M_SHOOTER);
   }
 
   @Override
@@ -82,7 +88,16 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Sensitivity: ", sensitivity);
 
     //Throttle allows control from .5 to 1
-    m_drive.arcadeDrive(-m_stick.getX(), m_stick.getY(), true);
+    m_drive.arcadeDrive(-sensitivity * m_stick.getZ(), sensitivity * m_stick.getY());
+
+    //Shooting Control
+    if (m_stick.getRawButton(RobotMap.SHOOT)) {
+      m_shooter.set(-.5);
+    } else if (m_stick.getRawButton(RobotMap.RELOAD)) {
+      m_shooter.set(.5);
+    } else {
+      m_shooter.stopMotor();
+    }
   }
 
   @Override
