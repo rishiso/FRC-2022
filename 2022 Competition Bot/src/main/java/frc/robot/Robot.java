@@ -91,7 +91,7 @@ public class Robot extends TimedRobot {
     m_drive.arcadeDrive(-sensitivity * m_stick.getZ(), sensitivity * m_stick.getY());
 
     //Shooting Control
-    if (m_stick.getRawButton(RobotMap.SHOOT)) {
+    if (m_stick.getTrigger()) {
       m_shooter.set(-.5);
     } else if (m_stick.getRawButton(RobotMap.RELOAD)) {
       m_shooter.set(.5);
