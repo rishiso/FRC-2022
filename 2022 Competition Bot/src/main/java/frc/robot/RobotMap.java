@@ -14,5 +14,6 @@ public final class RobotMap {
     final static int JOYSTICK = 0;
 
     //Joystick Buttons
-    final static int RELOAD = 2;
+    final static int RELOAD = 7;
+    final static int SHOOT = 8;
 }
