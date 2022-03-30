@@ -76,8 +76,8 @@ public class Robot extends TimedRobot {
           m_drive.arcadeDrive(0, .3);
         } else if (curTim <= 3.5) {
           m_shooter.set(.8);
+          m_drive.stopMotor();
         } else {
-          m_drive.arcadeDrive(0, 0);
           m_shooter.stopMotor();
         }
 
@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
           m_drive.arcadeDrive(0, .3);
           tim.reset();
         } else {
-          m_drive.arcadeDrive(0, 0);
+          m_drive.stopMotor();
           if (tim.get() <= 1.5) {
             m_shooter.set(.8);
           } else {
