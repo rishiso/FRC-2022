@@ -11,10 +11,10 @@ import edu.wpi.first.networktables.*;
 public class Robot extends TimedRobot {
   
   //Dashboard vars
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private static final int kDefaultAuto = 1;
+  private static final int kSensorAuto = 2;
+  private int m_autoSelected;
+  private final SendableChooser<Integer> m_chooser = new SendableChooser<>();
 
   //Drive Vars
   private DifferentialDrive m_drive;
@@ -26,14 +26,17 @@ public class Robot extends TimedRobot {
   private NetworkTable limelight;
 
   //Shooting Vars
-  PWMSparkMax m_shooter;
+  private PWMSparkMax m_shooter;
+
+  //Autonomous Vars
+  private Timer tim;
 
   @Override
   public void robotInit() {
 
     //Dashboard Init
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.addOption("Sensor Auto", kSensorAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
 
     //Drive Init
@@ -58,19 +61,48 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    tim.start();
   }
 
   @Override
   public void autonomousPeriodic() {
     switch (m_autoSelected) {
-      case kCustomAuto:
-        // Put custom auto code here
-        break;
       case kDefaultAuto:
+        //Drives forward and shoots
+
+        double curTim = tim.get();
+
+        if (curTim <= 2) {
+          m_drive.arcadeDrive(0, .3);
+        } else if (curTim <= 3.5) {
+          m_shooter.set(.8);
+        } else {
+          m_drive.arcadeDrive(0, 0);
+          m_shooter.stopMotor();
+        }
+
+        break;
+      
+      case kSensorAuto:
+        // Sensor based
+        /*
+        if (!corrrect distance) {
+          m_drive.arcadeDrive(0, .3);
+          tim.reset();
+        } else {
+          m_drive.arcadeDrive(0, 0);
+          if (tim.get() <= 1.5) {
+            m_shooter.set(.8);
+          } else {
+            m_shooter.stopMotor();
+          }
+        }
+        */
+
+        break;
+      
       default:
-        // Put default auto code here
+        // Do Nothing
         break;
     }
   }
@@ -85,8 +117,6 @@ public class Robot extends TimedRobot {
     sensitivity *= .25;
     sensitivity += .75;
 
-    SmartDashboard.putNumber("Sensitivity: ", sensitivity);
-
     //Throttle allows control from .5 to 1
     m_drive.arcadeDrive(-sensitivity * m_stick.getZ(), sensitivity * m_stick.getY());
 
@@ -98,6 +128,10 @@ public class Robot extends TimedRobot {
     } else {
       m_shooter.stopMotor();
     }
+
+    SmartDashboard.putNumber("Sensitivity: ", sensitivity);
+    SmartDashboard.putNumber("Y-Input: ", m_stick.getY());
+    SmartDashboard.putNumber("Z-Input: ", m_stick.getZ());
   }
 
   @Override
